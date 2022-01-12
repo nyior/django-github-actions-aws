@@ -25,3 +25,19 @@ jobs:
     - name: Run Tests
       run: |
         python manage.py test
+
+
+    deploy:
+      needs: [test]
+      runs-on: ubuntu-latest
+
+      steps:
+      - uses: actions/checkout@v2
+      - name: Django AWS EB deployment
+        uses: joel-hanson/django-aws-eb-deploy@V1.1
+        with:
+          python_version: '3.x'
+          aws_access_key_id: ${{ secrets.aws_access_key_id }}
+          aws_secret_access_key: ${{ secrets.aws_secret_access_key }}
+          deploy: true
+          flake8_config_file: "sample_project/.flake8"
