@@ -31,12 +31,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Django AWS EB deployment
-      uses: joel-hanson/django-aws-eb-deploy@V1.1
+    - name: Checkout source code
+      uses: actions/checkout@v2
+
+    - name: Generate deployment package
+      run: zip -r deploy.zip . -x '*.git*'
+
+    - name: Deploy to EB
+      uses: einaregilsson/beanstalk-deploy@v20
       with:
-        python_version: '3.x'
-        aws_access_key_id: ${{ secrets.aws_access_key_id }}
-        aws_secret_access_key: ${{ secrets.aws_secret_access_key }}
-        deploy: true
-        flake8_config_file: "sample_project/.flake8"
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: django-github-actions-aws
+        environment_name: django-github-actions-aws
+        version_label: 12345
+        region: "us-east-2"
+        deployment_package: deploy.zip
