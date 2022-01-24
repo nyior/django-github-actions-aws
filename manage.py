@@ -4,7 +4,7 @@ import os
 import sys
 
 
-def main():
+def man():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_github_actions_aws.settings')
     try:
         from django.core.management import execute_from_command_line
